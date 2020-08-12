@@ -2,6 +2,7 @@ import re
 from generate_otp import temp_otp
 from send_mail import send_email
 from itsdangerous import TimestampSigner
+import getpass
 
 SECRET_KEY = "kHJmo97vFGbze19GgpLiQm643vcWaP"
 
@@ -13,7 +14,7 @@ def validate_email(email):
 
 if __name__ == "__main__":
     sender_email = input("Type your email address and press enter: ")
-    password = input("Type your password and press enter:")
+    password = getpass.getpass(prompt="Type your password and press enter:")
     receiver_email = input("Type reciever's email address and press enter: ")
     if validate_email(sender_email) and validate_email(receiver_email):
         s = TimestampSigner(SECRET_KEY)
