@@ -13,13 +13,26 @@ def validate_email(email):
 	return False
 
 if __name__ == "__main__":
-    sender_email = input("Type your email address and press enter: ")
-    password = getpass.getpass(prompt="Type your password and press enter:")
-    receiver_email = input("Type reciever's email address and press enter: ")
-    if validate_email(sender_email) and validate_email(receiver_email):
-        s = TimestampSigner(SECRET_KEY)
-        otp = temp_otp()
-        message = f"""\nThis message is sent from Python for Email Id Verification, by prateek-manocha.\n\
+	sender_email = input("Type your email address and press enter: ")
+	password = getpass.getpass(prompt="Type your password and press enter:")
+	receiver_email = input("Type reciever's email address and press enter: ")
+	if validate_email(sender_email) and validate_email(receiver_email):
+		s = TimestampSigner(SECRET_KEY)
+		otp = temp_otp()
+		message = f"""\nThis message is sent from Python for Email Id Verification, by prateek-manocha.\n\
 The OTP is {s.unsign(otp).decode()}"""
-        send_email(sender_email, password, receiver_email, message)
-        print("Verification email sent succesfully.")
+		send_email(sender_email, password, receiver_email, message)
+		print("Verification email sent succesfully.")
+		try:
+			while True:
+				otp = s.unsign(otp, max_age=50).decode()
+				otp_entered = input("Enter the OTP received(case sensetive): ")
+				if otp_entered == otp:
+					print("Email Verified.")
+					break
+				else:
+					print("Wrong OTP entered.")
+		except:
+			print("OTP expired.")
+	else:
+		print("Invalid Sender or Receiver Email address.")
